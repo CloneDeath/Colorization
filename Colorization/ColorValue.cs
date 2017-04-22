@@ -65,5 +65,11 @@ namespace Colorization
             if (Math.Abs(B - other.B) > (1 / 255.0)) return false;
             return true;
         }
+
+        public bool UvIsAboutEqualTo(ColorValue other) {
+            if (Math.Abs(U - other.U) > (1 / 255.0)) return false;
+            if (Math.Abs(V - other.V) > (1 / 255.0)) return false;
+            return true;
+        }
     }
 }

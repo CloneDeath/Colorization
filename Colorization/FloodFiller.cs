@@ -22,18 +22,16 @@ namespace Colorization
         public void Run(WorkingFileSet workingSet) {
             Directory.CreateDirectory(workingSet.FloodFolder);
 
-            var iteration = 0;
             for (var y = 0; y < CurrentMap.Height; y++)
             {
+                Console.WriteLine($"Running Flood Iteration {y}...");
+
                 for (var x = 0; x < CurrentMap.Width; x++) {
                     if (_colorMask[x, y]) continue;
-
-                    Console.WriteLine($"Running Flood Iteration {iteration}...");
                     ExecuteDfs(new Point(x, y));
-                    
-                    iteration++;
                 }
 
+                if (y % 100 != 0 && y != CurrentMap.Height - 1) continue;
                 CurrentMap.SaveAs(workingSet.GetFloodFileForIteration(y));
             }
         }
