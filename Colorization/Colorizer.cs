@@ -5,13 +5,11 @@ namespace Colorization
 {
     public class Colorizer
     {
-        private readonly ColorMask _colorMask;
         private readonly WeightMap _weightMap;
         private readonly MomentumMap _momentumU;
         private readonly MomentumMap _momentumV;
 
-        public Colorizer(ColorMap initialFrame, ColorMask colorMask) {
-            _colorMask = colorMask;
+        public Colorizer(ColorMap initialFrame) {
             CurrentFrame = initialFrame;
             _weightMap = new WeightMap(initialFrame);
             _momentumU = new MomentumMap(initialFrame.Width, initialFrame.Height);
@@ -27,8 +25,6 @@ namespace Colorization
 
             for (var x = 0; x < nextFrame.Width; x++) {
                 for (var y = 0; y < nextFrame.Height; y++) {
-                    if (_colorMask[x, y]) continue;
-                    
                     var weightedSumOfNeighborsU = GetWeightedSumOfNeighbors(x, y, c => c.U);
                     var uError = CurrentFrame[x, y].U - weightedSumOfNeighborsU;
                     _momentumU[x, y] = (_momentumU[x, y] * Momentum) + (uError * (1 - Momentum));

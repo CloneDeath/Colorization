@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CachedWeightMap.cs" />
     <Compile Include="Colorizer.cs" />
     <Compile Include="ColorMap.cs" />
     <Compile Include="ColorMask.cs" />
@@ -53,7 +52,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeightMap.cs" />
-    <Compile Include="WorkingFileSet.cs" />
+    <Compile Include="WorkingLocation\WorkingDirectory.cs" />
+    <Compile Include="WorkingLocation\WorkingFileSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
