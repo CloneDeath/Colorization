@@ -1,84 +1,53 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace Colorization
 {
     public class Colorizer
     {
         private readonly WeightMap _weightMap;
-        private ColorMask _needsUpdate;
+        private readonly MomentumMap _momentumU;
+        private readonly MomentumMap _momentumV;
 
         public Colorizer(ColorMap initialFrame) {
             CurrentFrame = initialFrame;
             _weightMap = new WeightMap(initialFrame);
-
-            _needsUpdate = new ColorMask(initialFrame.Width, initialFrame.Height);
-            foreach (var pixel in _needsUpdate.Points) {
-                _needsUpdate[pixel] = true;
-            }
+            _momentumU = new MomentumMap(initialFrame.Width, initialFrame.Height);
+            _momentumV = new MomentumMap(initialFrame.Width, initialFrame.Height);
         }
 
         public ColorMap CurrentFrame { get; set; }
-        public double LearningRate { get; set; } = 0.05;
-        public double Momentum { get; set; } = 0.9;
+        public double LearningRate { get; set; } = 0.9;
+        public double Momentum { get; set; } = 0.0;
 
         public void RunIteration() {
             var nextFrame = CurrentFrame.Copy();
-            var nextNeedsUpdate = new ColorMask(_needsUpdate.Width, _needsUpdate.Height);
 
             for (var y = 0; y < nextFrame.Height; y++) {
                 for (var x = 0; x < nextFrame.Width; x++) {
-                    if (_needsUpdate[x, y] == false) continue;
-
-                    var neighbors = CurrentFrame.GetNeighbors(x, y);
-                    var originalColor = CurrentFrame[x, y].Copy();
-
-                    var possibleColors = GetColorChoices(neighbors, originalColor.Y);
-                    var bestColor = originalColor.Copy();
-                    var bestError = GetTotalSumOfErrors(x, y);
-
-                    var needsUpdate = false;
-
-                    foreach (var possibleColor in possibleColors) {
-                        CurrentFrame[x, y] = possibleColor;
-                        var error = GetTotalSumOfErrors(x, y);
-                        if (error >= bestError) continue;
-
-                        needsUpdate = true;
-                        bestError = error;
-                        bestColor = possibleColor.Copy();
+                    var weightedSumOfNeighborsU = GetWeightedSumOfNeighbors(x, y, c => c.U);
+                    var uError = CurrentFrame[x, y].U - weightedSumOfNeighborsU;
+                    if (_momentumU[x, y] != 0) {
+                        _momentumU[x, y] = (_momentumU[x, y] * Momentum) + (uError * (1 - Momentum));
                     }
-
-                    if (needsUpdate) {
-                        foreach (var neighbor in neighbors)
-                        {
-                            nextNeedsUpdate[neighbor] = true;
-                        }
-
-                        CurrentFrame[x, y] = originalColor;
-                        nextFrame[x, y] = bestColor;
+                    else {
+                        _momentumU[x, y] = uError;
                     }
+                    nextFrame[x, y].U -= (_momentumU[x, y] * LearningRate);
+
+                    var weightedSumOfNeighborsV = GetWeightedSumOfNeighbors(x, y, c => c.V);
+                    var vError = CurrentFrame[x, y].V - weightedSumOfNeighborsV;
+                    if (_momentumV[x, y] != 0) {
+                        _momentumV[x, y] = (_momentumV[x, y] * Momentum) + (vError * (1 - Momentum));
+                    }
+                    else {
+                        _momentumV[x ,y] = vError;
+                    }
+                    nextFrame[x, y].V -= (_momentumV[x, y] * LearningRate);
                 }
             }
 
-            _needsUpdate = nextNeedsUpdate;
             CurrentFrame = nextFrame;
-        }
-
-        private IEnumerable<ColorValue> GetColorChoices(List<Point> neighbors, double intensity) {
-            var choices = neighbors.Select(n => CurrentFrame[n].Copy());
-            foreach (var colorValue in choices) {
-                colorValue.Y = intensity;
-            }
-            return choices;
-        }
-
-        private double GetTotalSumOfErrors(int x, int y) {
-            var weightedSumOfNeighborsU = GetWeightedSumOfNeighbors(x, y, c => c.U);
-            var weightedSumOfNeighborsV = GetWeightedSumOfNeighbors(x, y, c => c.V);
-            return weightedSumOfNeighborsV + weightedSumOfNeighborsU;
         }
 
         private double GetWeightedSumOfNeighbors(int x, int y, Func<ColorValue, double> component) {

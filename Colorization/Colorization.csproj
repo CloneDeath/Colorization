@@ -49,6 +49,7 @@
     <Compile Include="ColorValue.cs" />
     <Compile Include="DataMap.cs" />
     <Compile Include="FloodFiller.cs" />
+    <Compile Include="MomentumMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeightMap.cs" />

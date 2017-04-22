@@ -18,8 +18,9 @@ namespace Colorization
             var ys = _initialFrame[s.X, s.Y].Y;
             var mean = GetMeanIntensity(r);
             var variance = GetVariance(r);
-            if (variance <= 0) return 1;
-            return 1 + ((1 / variance) * (yr - mean) * (ys - mean));
+            if (variance <= 0.00001) return 1;
+            var weight = 1 + ((1 / variance) * (yr - mean) * (ys - mean));
+            return weight > 0 ? weight : 0;
         }
 
         public double GetVariance(Point r) {

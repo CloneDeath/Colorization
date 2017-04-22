@@ -41,7 +41,7 @@ namespace Colorization
             var initialFrame = GetInitialFrame(startingImage, markedImage, colorMask, workingSet);
 
             var colorizer = new Colorizer(initialFrame);
-            for (var i = 0; i < 20; i++) {
+            for (var i = 0; i < 100; i++) {
                 Console.WriteLine($"Running Colorizer Iteration {i}...");
                 var dt = Stopwatch.StartNew();
                 colorizer.RunIteration();
