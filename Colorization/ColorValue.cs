@@ -60,9 +60,9 @@ namespace Colorization
         }
 
         public bool IsAboutEqualTo(ColorValue other) {
-            if (Math.Abs(R - other.R) > (1 / 255.0)) return false;
-            if (Math.Abs(G - other.G) > (1 / 255.0)) return false;
-            if (Math.Abs(B - other.B) > (1 / 255.0)) return false;
+            if (Math.Abs(R - other.R) > (2 / 255.0)) return false;
+            if (Math.Abs(G - other.G) > (2 / 255.0)) return false;
+            if (Math.Abs(B - other.B) > (2 / 255.0)) return false;
             return true;
         }
 
