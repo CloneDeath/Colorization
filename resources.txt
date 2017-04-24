@@ -1,0 +1,7 @@
+http://www.cs.huji.ac.il/~yweiss/Colorization/
+
+https://en.wikipedia.org/wiki/Donald_Trump#/media/File:Donald_Trump_official_portrait.jpg - Trump's Photograph
+
+https://www.fourcc.org/fccyvrgb.php - YUV color conversion
+
+http://www.coloring-book.info/coloring/coloring_page.php?id=328 - Coloring book pages

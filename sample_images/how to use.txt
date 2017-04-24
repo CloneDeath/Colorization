@@ -1,0 +1,5 @@
+just copy and paste the images directory into the bin/Debug directory. the path should read: "Colorization\bin\Debug\images\input"
+
+each directory in input must contain two files: "gray.*" and "marked.*", it doesn't matter the extension name.
+
+After running the code, all the output will be placed into a seperate folder (automatically created) at "Colorization\bin\Debug\images\output". The files/folders it creates will be datetime stamped, so that subsequent runs do not destroy prior work.
